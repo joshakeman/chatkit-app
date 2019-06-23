@@ -20,23 +20,26 @@ class App extends Component {
           currentId: '',
           currentView: 'ChatMessage'
       }
-      this.changeView = this.changeView.bind(this);
-      this.createUser = this.createUser.bind(this);
   }
 
   componentDidMount() {
 
     //Simulating passing email as props... would be setting user_email
     //as this.props.user_email
+    //username could be this.props.username
     this.setState({
+        username: 'fakeuser',
         user_email: 'info@email.com'
     })
   }
 
-  createUser() {
+  createUser = () => {
     const username= this.state.user_email
       chatkit.createUser({
+          //might make sense to have id be their email
           id: username,
+          // in final app name could be this.props.first_name + this.props.last_name or
+          // `${this.props.first_name} ${this.props.last_name}`
           name: username,
       })
       .then((currentUser) => {
@@ -57,12 +60,6 @@ class App extends Component {
           }
       });
   }
-
-changeView(view) {
-    this.setState({
-        currentView: view
-    })
-}
 
 render() {
       let view ='';
