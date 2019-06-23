@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 
 import ChatMessage from './components/ChatMessage';
+import ChatApp from './components/ChatApp'
 
 import { default as Chatkit } from '@pusher/chatkit-server';
 
@@ -32,7 +33,8 @@ class App extends Component {
     })
   }
 
-  createUser(username) {
+  createUser() {
+    const username= this.state.user_email
       chatkit.createUser({
           id: username,
           name: username,
@@ -66,9 +68,9 @@ render() {
       let view ='';
 
       if (this.state.currentView === "ChatMessage") {
-          view = <ChatMessage  changeView={this.changeView}/>
+          view = <ChatMessage  authorize={this.createUser}/>
       } else if (this.state.currentView === "chatApp") {
-          view = <h1>The chatapp will go here</h1>
+          view = <ChatApp currentId={this.state.currentId} />
       }
       return (
           <div className="App">

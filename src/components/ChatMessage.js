@@ -35,7 +35,7 @@ class  ChatMessage extends Component {
         this.setState({
             open: false
         })
-        this.props.changeView('chatApp')
+        this.props.authorize()
     }
 
     render() {
