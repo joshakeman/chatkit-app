@@ -3,6 +3,7 @@ import './App.css';
 
 import ChatMessage from './components/ChatMessage';
 import ChatApp from './components/ChatApp'
+import StripeBtn from './components/StripeBtn'
 
 import { default as Chatkit } from '@pusher/chatkit-server';
 
@@ -34,37 +35,44 @@ class App extends Component {
   }
 
   createUser = () => {
-    const username= this.state.user_email
-      chatkit.createUser({
-          //might make sense to have id be their email
-          id: username,
-          // in final app name could be this.props.first_name + this.props.last_name or
-          // `${this.props.first_name} ${this.props.last_name}`
-          name: username,
-      })
-      .then((currentUser) => {
-          this.setState({
-              currentUsername: username,
-              currentId: username,
-              currentView: 'chatApp'
-          })
-      }).catch((err) => {
-               if(err.status === 400) {
-              this.setState({
-                  currentUsername: username,
-                  currentId: username,
-                  currentView: 'chatApp'
-              })
-          } else {
-              console.log(err.status);
-          }
-      });
+  const username= this.state.user_email
+    chatkit.createUser({
+        //might make sense to have id be their email
+        id: username,
+        // in final app name could be this.props.first_name + this.props.last_name or
+        // `${this.props.first_name} ${this.props.last_name}`
+        name: username,
+    })
+    .then((currentUser) => {
+        this.setState({
+            currentUsername: username,
+            currentId: username,
+            currentView: 'chatApp'
+        })
+    }).catch((err) => {
+              if(err.status === 400) {
+            this.setState({
+                currentUsername: username,
+                currentId: username,
+                currentView: 'chatApp'
+            })
+        } else {
+            console.log(err.status);
+        }
+    });
+  }
+
+  changeView = () => {
+    this.setState({
+      currentView: "chatApp"
+    })
   }
 
 render() {
       let view ='';
 
       if (this.state.currentView === "ChatMessage") {
+          // view = <StripeBtn redirect={this.changeView} authorize={this.createUser}/>
           view = <ChatMessage  authorize={this.createUser}/>
       } else if (this.state.currentView === "chatApp") {
           view = <ChatApp currentId={this.state.currentId} />
