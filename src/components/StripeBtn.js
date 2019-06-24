@@ -13,8 +13,7 @@ const stripeBtn = (props) => {
       .post("https://delphe-backend.herokuapp.com/payment", body)
       .then(response => {
         console.log(response);
-        alert("Payment Success");
-        props.redirect()
+        // alert("Payment Success");
         props.authorize()
       })
       .catch(error => {

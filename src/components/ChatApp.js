@@ -12,7 +12,10 @@ class ChatApp extends Component {
             currentUser: null,
             currentRoom: {users:[]},
             messages: [],
-            users: []
+            users: [],
+            roomId: '',
+            roomName: '',
+            roomIsOpen: true
         }
     }
 
@@ -30,12 +33,32 @@ class ChatApp extends Component {
             .then(currentUser => {
                 console.log(currentUser)
                 this.setState({ currentUser: currentUser })
-                return currentUser.subscribeToRoom({
-                    roomId: "31230419",
+                return currentUser.createRoom({
+                    name: `fakeuser's room`,
+                    private: true,
+                    addUserIds: ['fakeuser', 'User 2'],
+                    customData: { foo: 42 },
+                  }).then(room => {
+                    console.log(`Created room called ${room.name}`)
+                    this.setState({
+                        roomId: room.id,
+                        roomName: room.name
+                    })
+                    console.log(room)
+                  })
+                  .catch(err => {
+                    console.log(`Error creating room ${err}`)
+                  })
+            })
+            .then(() => {
+                // console.log(currentUser)
+                return this.state.currentUser.subscribeToRoom({
+                    roomId: this.state.roomId,
                     messageLimit: 100,
                     hooks: {
                         onMessage: message => {
                             this.setState({
+                                // roomIsOpen: true,
                                 messages: [...this.state.messages, message],
                             })
                         },
@@ -48,9 +71,19 @@ class ChatApp extends Component {
                     currentRoom,
                     users: currentRoom.userIds
                 })
+                this.props.startTimer()
             })
             .catch(error => console.log(error))
     }
+
+    // componentDidUpdate(prevProps, prevState) {
+    //     // only update chart if the data has changed
+    //     console.log(prevState)
+    //     if (prevState.roomIsOpen) {
+    //     this.state = {...prevState}
+    //     console.log(this.state)
+    //     }
+    //   }
     
     addMessage = (text) => {
         this.state.currentUser.sendMessage({
@@ -61,10 +94,11 @@ class ChatApp extends Component {
     }
 
     render() {
+        const { roomName, messages } = this.state
         return (
             <div>
-                <h2 className="header">Let's Talk</h2>
-                <MessageList messages={this.state.messages} />
+                <h2 className="header">{roomName}</h2>
+                <MessageList messages={messages} />
                 <Input className="input-field" onSubmit={this.addMessage} />
             </div>
         )

@@ -19,8 +19,8 @@ body {
   cursor: pointer;
 }
 .form-container {
-  height: 500px;
-  border: 1px solid #5E0565;
+  height: 100vh;
+  display: 'flex';
 }
 .form-container h1 {
   padding: 10px;
@@ -78,7 +78,7 @@ body {
 }
 .chatapp  {
   margin: 0 auto;
-  height: 80vh;
+  /* height: 80vh; */
   border: 1px solid #a1a1a4;
 }
 .header  {
@@ -92,10 +92,10 @@ body {
 .message-list  {
   list-style-type: none;
   padding: 0px 20px;
-  overflow: scroll;
+  overflow-y: scroll;
   /* max-height: calc(100vh - 150px); */
   margin-bottom: 35px;
-  height: 600px;
+  height: 85vh;
 }
 .message-sender  {
   font-weight: bold;

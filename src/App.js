@@ -29,13 +29,13 @@ class App extends Component {
     //as this.props.user_email
     //username could be this.props.username
     this.setState({
-        username: 'fakeuser',
-        user_email: 'info@email.com'
+        user_email: 'info@email.com',
+        username: 'fakeuser'
     })
   }
 
   createUser = () => {
-  const username= this.state.user_email
+  const username= this.state.username
     chatkit.createUser({
         //might make sense to have id be their email
         id: username,
@@ -62,20 +62,26 @@ class App extends Component {
     });
   }
 
-  changeView = () => {
+  changeViewFor1Hour = () => {
     this.setState({
       currentView: "chatApp"
     })
+    setTimeout(() => {
+      this.setState({
+        currentView: "ChatMessage"
+      })
+    }, 8000);
+    // one hour = 3600000
   }
 
 render() {
       let view ='';
 
       if (this.state.currentView === "ChatMessage") {
-          // view = <StripeBtn redirect={this.changeView} authorize={this.createUser}/>
-          view = <ChatMessage  authorize={this.createUser}/>
+          view = <StripeBtn redirect={this.changeView} authorize={this.createUser}/>
+          // view = <ChatMessage  authorize={this.createUser}/>
       } else if (this.state.currentView === "chatApp") {
-          view = <ChatApp currentId={this.state.currentId} />
+          view = <ChatApp startTimer={this.changeViewFor1Hour} currentId={this.state.currentId} />
       }
       return (
           <div className="App">
