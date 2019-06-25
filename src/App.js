@@ -16,7 +16,6 @@ class App extends Component {
   constructor(props) {
       super(props);
       this.state = {
-          user_email: '',
           currentUsername: '',
           currentId: '',
           currentView: 'ChatMessage'
@@ -24,12 +23,19 @@ class App extends Component {
   }
 
   componentDidMount() {
-
     //Simulating passing email as props... would be setting user_email
     //as this.props.user_email
     //username could be this.props.username
+    // const localCurrentId = localStorage.getItem('currentUser')
+    
+    // localCurrentId ?
+    //   this.setState({
+    //     currentView: 'chatApp'
+    //   }) : this.setState({
+    //     currentView: 'ChatMessage'
+    //   })
+
     this.setState({
-        user_email: 'info@email.com',
         username: 'fakeuser'
     })
   }
@@ -60,8 +66,11 @@ class App extends Component {
             console.log(err.status);
         }
     });
+
+    localStorage.setItem('currentId', username)
   }
 
+  //Is called by the ChatApp component when it mounts. After one hour 
   changeViewFor1Hour = () => {
     this.setState({
       currentView: "chatApp"
@@ -70,7 +79,7 @@ class App extends Component {
       this.setState({
         currentView: "ChatMessage"
       })
-    }, 8000);
+    }, 3600000);
     // one hour = 3600000
   }
 

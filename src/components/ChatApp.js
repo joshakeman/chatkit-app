@@ -20,6 +20,8 @@ class ChatApp extends Component {
     }
 
     componentDidMount() {
+        console.log(JSON.parse(localStorage.getItem('currentUser')))
+
         const chatManager = new ChatManager({
             instanceLocator: "v1:us1:3a28e9bf-26c6-4a14-afa9-c74b59e740e6",
             userId: this.props.currentId,
@@ -28,11 +30,37 @@ class ChatApp extends Component {
             })
         })
 
-        chatManager
+        // const storedRoomId = localStorage.getItem('roomId') ?
+
+        // chatManager
+        //     .connect()
+        //     //check if a room id already exists on local storage
+        //     .then(currentUser => {
+        //         this.setState({ 
+        //             currentUser: currentUser,
+        //             roomId: storedRoomId 
+        //         })
+        //     currentUser.fetchMultipartMessages({
+        //         roomId: storedRoomId,
+        //         initialId: 42,
+        //         direction: 'older',
+        //         limit: 10,
+        //       })
+        //         .then(messages => {
+              
+        //           // do something with the messages
+        //         })
+        //         .catch(err => {
+        //           console.log(`Error fetching messages: ${err}`)
+        //         })
+        //     }).catch(error => console.log(error)) :
+
+            chatManager
             .connect()
             .then(currentUser => {
                 console.log(currentUser)
                 this.setState({ currentUser: currentUser })
+                localStorage.setItem('currentUser', JSON.stringify(currentUser))
                 return currentUser.createRoom({
                     name: `fakeuser's room`,
                     private: true,
@@ -71,6 +99,7 @@ class ChatApp extends Component {
                     currentRoom,
                     users: currentRoom.userIds
                 })
+                localStorage.setItem('roomId', this.state.roomId);
                 this.props.startTimer()
             })
             .catch(error => console.log(error))
