@@ -1,8 +1,59 @@
 import React, {Component} from 'react';
 import { ChatManager, TokenProvider } from '@pusher/chatkit-client';
 
+import AppBar from '@material-ui/core/AppBar';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Divider from '@material-ui/core/Divider';
+import Drawer from '@material-ui/core/Drawer';
+import Hidden from '@material-ui/core/Hidden';
+import IconButton from '@material-ui/core/IconButton';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import MailIcon from '@material-ui/icons/Mail';
+import MenuIcon from '@material-ui/icons/Menu';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import { withStyles } from '@material-ui/core/styles'
+
 import Input from './Input'
 import MessageList from './MessageList';
+
+const drawerWidth = 240;
+
+const styles = theme => ({
+  root: {
+    display: 'flex',
+  },
+  drawer: {
+    [theme.breakpoints.up('sm')]: {
+      width: drawerWidth,
+      flexShrink: 0,
+    },
+  },
+  appBar: {
+    marginLeft: drawerWidth,
+    [theme.breakpoints.up('sm')]: {
+      width: `calc(100% - ${drawerWidth}px)`,
+    },
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: {
+      display: 'none',
+    },
+  },
+  toolbar: theme.mixins.toolbar,
+  drawerPaper: {
+    width: drawerWidth,
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+  },
+})
 
 
 class ChatApp extends Component {
@@ -15,7 +66,8 @@ class ChatApp extends Component {
             users: [],
             roomId: '',
             roomName: '',
-            roomIsOpen: true
+            roomIsOpen: true,
+            mobileOpen: false,
         }
     }
 
@@ -60,7 +112,7 @@ class ChatApp extends Component {
             .then(currentUser => {
                 console.log(currentUser)
                 this.setState({ currentUser: currentUser })
-                localStorage.setItem('currentUser', JSON.stringify(currentUser))
+                // localStorage.setItem('currentUser', JSON.stringify(currentUser))
                 return currentUser.createRoom({
                     name: `fakeuser's room`,
                     private: true,
@@ -122,16 +174,106 @@ class ChatApp extends Component {
         .catch(error => console.error('error', error));
     }
 
+    handleDrawerToggle = () => {
+        this.setState({
+            mobileOpen: !this.state.mobileOpen
+        })
+      }
+
     render() {
-        const { roomName, messages } = this.state
-        return (
+        const { roomName, messages, mobileOpen } = this.state,
+              { classes } = this.props
+
+        const drawer = (
             <div>
-                <h2 className="header">{roomName}</h2>
+              <div className={classes.toolbar} />
+              <Divider />
+              <List>
+                {['janedoe', 'billgates', 'lydster'].map((text, index) => (
+                  <ListItem button key={text}>
+                    {/* <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon> */}
+                    <ListItemText primary={text} />
+                  </ListItem>
+                ))}
+              </List>
+              {/* <Divider />
+              <List>
+                {['All mail', 'Trash', 'Spam'].map((text, index) => (
+                  <ListItem button key={text}>
+                    <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                    <ListItemText primary={text} />
+                  </ListItem>
+                ))}
+              </List> */}
+            </div>
+          );
+        
+          return (
+            <div className={classes.root}>
+              <CssBaseline />
+              <AppBar position="fixed" className={classes.appBar}>
+                <Toolbar>
+                  <IconButton
+                    color="inherit"
+                    aria-label="Open drawer"
+                    edge="start"
+                    onClick={this.handleDrawerToggle}
+                    className={classes.menuButton}
+                  >
+                    <MenuIcon />
+                  </IconButton>
+                  <Typography variant="h6" noWrap>
+                    {roomName}
+                  </Typography>
+                </Toolbar>
+              </AppBar>
+              <nav className={classes.drawer} aria-label="Mailbox folders">
+                {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+                <Hidden smUp implementation="css">
+                  <Drawer
+                    // container={container}
+                    variant="temporary"
+                    anchor="left"
+                    open={mobileOpen}
+                    onClose={this.handleDrawerToggle}
+                    classes={{
+                      paper: classes.drawerPaper,
+                    }}
+                    ModalProps={{
+                      keepMounted: true, // Better open performance on mobile.
+                    }}
+                  >
+                    {drawer}
+                  </Drawer>
+                </Hidden>
+                <Hidden xsDown implementation="css">
+                  <Drawer
+                    classes={{
+                      paper: classes.drawerPaper,
+                    }}
+                    variant="permanent"
+                    open
+                  >
+                    {drawer}
+                  </Drawer>
+                </Hidden>
+              </nav>
+              <main className={classes.content}>
+                <div className={classes.toolbar} />
+
                 <MessageList messages={messages} />
                 <Input className="input-field" onSubmit={this.addMessage} />
+              </main>
             </div>
-        )
+          );
+        // return (
+        //     <div>
+        //         <h2 className="header">{roomName}</h2>
+        //         <MessageList messages={messages} />
+        //         <Input className="input-field" onSubmit={this.addMessage} />
+        //     </div>
+        // )
     }
 }
 
-export default ChatApp;
+export default withStyles(styles)(ChatApp);

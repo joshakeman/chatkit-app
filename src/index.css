@@ -95,7 +95,7 @@ body {
   overflow-y: scroll;
   /* max-height: calc(100vh - 150px); */
   margin-bottom: 35px;
-  height: 85vh;
+  height: 80vh;
 }
 .message-sender  {
   font-weight: bold;
@@ -107,7 +107,7 @@ body {
   margin-top: 5px
 }
 .message-input  {
-  width: 70%;
+  width: 50%;
   height: 50px;
   border: 0;
   border-top: 1px solid #e0e0e0;

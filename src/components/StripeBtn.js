@@ -6,7 +6,7 @@ const stripeBtn = (props) => {
    
   const onToken = token => {
     const body = {
-      amount: 999,
+      amount: 1400,
       token: token
   };
   axios
@@ -27,7 +27,7 @@ const stripeBtn = (props) => {
       name="Delphe" //Modal Header
       description="Start your 1 hour expert session"
       panelLabel="Confirm payment" //Submit button in modal
-      amount={999} //Amount in cents $9.99
+      amount={1400} //Amount in cents $9.99
       token={onToken}
       stripeKey={publishableKey}
       // image="https://www.vidhub.co" //Pop-in header image

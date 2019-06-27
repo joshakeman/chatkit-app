@@ -67,7 +67,7 @@ class App extends Component {
         }
     });
 
-    localStorage.setItem('currentId', username)
+    // localStorage.setItem('currentId', username)
   }
 
   //Is called by the ChatApp component when it mounts. After one hour 
